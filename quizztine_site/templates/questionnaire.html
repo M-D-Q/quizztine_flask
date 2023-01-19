@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block content %}
+    <h1>{{ question }}</h1>
+    <form method="post">
+        {{ form.hidden_tag() }}
+        {{ form.answer.label }} {{ form.answer(size=20) }}
+        {{ form.submit() }}
+    </form>
+    {% if message %}
+    <p>{{ message }}</p>
+    {% endif %}
+    
+{% endblock %}
