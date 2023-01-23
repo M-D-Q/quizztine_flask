@@ -4,5 +4,7 @@
 
 <h1>Result</h1>
 <p>Your score: {{ score }} %</p>
-
+<br>
+<br>
+    <a href="{{ url_for('questions.restart') }}"> RESTART : (This will wipe your current session)</a>
 {% endblock %}

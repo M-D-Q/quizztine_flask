@@ -1,7 +1,8 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, SelectField
+from wtforms import StringField, SubmitField, SelectField, BooleanField
 from wtforms.validators import DataRequired
 from quizztine_site.models import Questionnaires, Questions
+
 
 class QuestionForm(FlaskForm):
     answer = StringField('Answer', validators=[DataRequired()])
@@ -17,7 +18,7 @@ class QuestionForm(FlaskForm):
 
 class SelectQuestionnaireForm(FlaskForm):
     questionnaires = SelectField('Select a questionnaire', choices=[], validators=[DataRequired()])
+    yes_no = BooleanField('Do you want only the 25 first questions?')
     submit = SubmitField('Start')
-
 
 

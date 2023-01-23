@@ -3,10 +3,17 @@
 {% block content %}
 
 <h1>Select Questionnaire</h1>
+<br>
 <form method="post">
     {{ form.hidden_tag() }}
     {{ form.questionnaires.label }} {{ form.questionnaires() }}
+    <br>
+    {{ form.yes_no.label }} {{ form.yes_no() }}
+    <br>
     {{ form.submit() }}
 </form>
+<br><br><br><br><br><br><br><br>
 
+<br><br><br><br><br><br><br><br>
+    <a href="{{ url_for('questions.restart') }}"> Wipe Current Session data (if you need to reset progress)</a>
 {% endblock %}

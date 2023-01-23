@@ -2,6 +2,7 @@ from flask import render_template, url_for, flash, session, request, redirect, B
 from quizztine_site.questionnaire.forms import QuestionForm, SelectQuestionnaireForm
 from quizztine_site import db
 from quizztine_site.models import Questionnaires,Questions
+from random import shuffle
 
 questions = Blueprint('questions', __name__)
 
@@ -22,6 +23,7 @@ def select_question_set():
     if form.validate_on_submit():
         # get selected question set
         session['questionnaire_id'] = form.questionnaires.data
+        session['25first'] = form.yes_no.data
         return redirect('/questionnaire')
     return render_template('select_questionnaire.html', form=form)
 
@@ -36,6 +38,9 @@ def questionnaire():
     if not questionnaire_id:
         return redirect('/questionnairechoice')
     all_questions = get_questions(questionnaire_id)
+    shuffle(all_questions)
+    if session['25first']:
+        all_questions = all_questions[:25]
 
     if 'score' not in session:
         session['score'] = 0
@@ -45,7 +50,7 @@ def questionnaire():
     #current_question = session.get('current_question', 0)
     #score = session.get('score', 0)
     current_question = session['current_question']
-    score = session['score']
+    session['len_questions'] = len(all_questions)
 
     form = QuestionForm()
 
@@ -56,22 +61,11 @@ def questionnaire():
         if answer.lower() == all_questions[current_question].answer.lower():
             message = 'Correct ! \n' + all_questions[current_question].explanation
             session['score'] += 1
-            #current_question += 1
-            #session['current_question'] = current_question
-            #session['current_question'] += 1
         else:
             message = 'Incorrect ! \n' + all_questions[current_question].explanation
-            #current_question += 1
-            #session['current_question'] = current_question
-            #session['current_question'] += 1
 
-        if current_question >= len(all_questions):
-            percentage = (score / len(all_questions)) * 100
-            session['percentage'] = percentage
-            return redirect(url_for('questions.result'))
-        else :
-            return render_template('questionnaire.html', form=form, question=all_questions[current_question].question, message=message)
-    return render_template('questionnaire.html', form=form, question=all_questions[current_question].question)
+        return render_template('questionnaire.html', form=form, question=all_questions[current_question].question, message=message, curr_question=current_question, len_questions=session['len_questions'])
+    return render_template('questionnaire.html', form=form, question=all_questions[current_question].question, curr_question=current_question, len_questions=session['len_questions'])
 
 
 @questions.route('/result')
@@ -81,7 +75,17 @@ def result():
 @questions.route('/next_question', methods=['GET','POST'])
 def next_question():
     session['current_question'] += 1
+    if session['current_question'] >= session['len_questions']:
+        percentage = (session['score'] / session['len_questions']) * 100
+        session['percentage'] = percentage
+        return redirect(url_for('questions.result'))
+    
     return redirect(url_for('questions.questionnaire'))
+
+@questions.route('/restart')
+def restart():
+    session.clear()
+    return redirect(url_for('questions.select_question_set'))
 
 
 
