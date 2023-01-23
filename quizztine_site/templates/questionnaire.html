@@ -9,5 +9,11 @@
     {% if message %}
     <p>{{ message }}</p>
     {% endif %}
+    <br>
+    <br>
+    <form method="post" action="{{ url_for('questions.next_question') }}">
+        <button type="submit">Next Question</button>
+    </form>
+    
     
 {% endblock %}

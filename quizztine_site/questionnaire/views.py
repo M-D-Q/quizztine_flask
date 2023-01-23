@@ -58,12 +58,12 @@ def questionnaire():
             session['score'] += 1
             #current_question += 1
             #session['current_question'] = current_question
-            session['current_question'] += 1
+            #session['current_question'] += 1
         else:
             message = 'Incorrect ! \n' + all_questions[current_question].explanation
-            current_question += 1
+            #current_question += 1
             #session['current_question'] = current_question
-            session['current_question'] += 1
+            #session['current_question'] += 1
 
         if current_question >= len(all_questions):
             percentage = (score / len(all_questions)) * 100
@@ -77,6 +77,12 @@ def questionnaire():
 @questions.route('/result')
 def result():
     return render_template('result.html', score=session['percentage'])
+
+@questions.route('/next_question', methods=['GET','POST'])
+def next_question():
+    session['current_question'] += 1
+    return redirect(url_for('questions.questionnaire'))
+
 
 
 
