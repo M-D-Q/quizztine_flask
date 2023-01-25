@@ -130,7 +130,7 @@ def add_to_the_db(liste_contenu_inputables):
                                     options_html=item[2],
                                     answer=item[3],
                                     answer_html=item[4],
-                                    master_questionnaire=master_questionnaire.id,
+                                    master_questionnaire=master_questionnaire,
                                     truthworthiness=item[6])
         db.session.add(new_question)
     db.session.commit()
