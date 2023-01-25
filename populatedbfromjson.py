@@ -15,15 +15,8 @@ with open ("auto_christine.json", "r", encoding='utf-8') as dico:
 with app.app_context():
     db.create_all()
 
-
-
-
-
-
-
-
     for key in data.keys():
-            new_questionnaire = Questionnaires(name=str(key))
+            new_questionnaire = Questionnaires(name=str(key),description='oldformat')
             db.session.add(new_questionnaire)
             db.session.commit()
             # Iterate through the questions in the questionnaire

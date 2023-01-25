@@ -97,17 +97,13 @@ def miaou(browser, patterns):
         else :
             print("et là c'est une lettre")
             liste_contenu_inputables.append(recup_question_inputable(element_miaou,patterns))
-        if i > 1 :
+        if i > 6 :
             break
     print("FINITO, GO DB MAITENANT")
     return(liste_contenu_inputables)
 
 def add_to_the_db(liste_contenu_inputables):
-    print(len(liste_contenu_inputables))
-    db.create_all()
-
-
-
+    
     #questionnaire_name = "AZ-104 Everything"
     #new_questionnaire = Questionnaires(name=questionnaire_name)
     #db.session.add(new_questionnaire)
