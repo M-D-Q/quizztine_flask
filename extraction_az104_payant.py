@@ -97,14 +97,14 @@ def miaou(browser, patterns):
         else :
             print("et là c'est une lettre")
             liste_contenu_inputables.append(recup_question_inputable(element_miaou,patterns))
-        if i > 3 :
+        if i > 1 :
             break
     print("FINITO, GO DB MAITENANT")
     return(liste_contenu_inputables)
 
 def add_to_the_db(liste_contenu_inputables):
     print(len(liste_contenu_inputables))
-    
+    db.create_all()
 
 
 
@@ -116,9 +116,9 @@ def add_to_the_db(liste_contenu_inputables):
     for item in liste_contenu_inputables :
         print(item)
         item_name = item[5]
-        item = db.session.query(Questionnaires).filter_by(name=item_name).first()
-        if item:
-            master_questionnaire = item.id
+        itemkek = db.session.query(Questionnaires).filter_by(name=item_name).first()
+        if itemkek:
+            master_questionnaire = itemkek.id
         else:
             new_questionnaire = Questionnaires(name=item_name)
             db.session.add(new_questionnaire)
@@ -131,7 +131,7 @@ def add_to_the_db(liste_contenu_inputables):
                                     answer=item[3],
                                     answer_html=item[4],
                                     master_questionnaire=master_questionnaire,
-                                    truthworthiness=item[6])
+                                    trustworthiness=item[6])
         db.session.add(new_question)
     db.session.commit()
 
