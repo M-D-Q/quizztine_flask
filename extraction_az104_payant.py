@@ -48,7 +48,6 @@ browser.find_element(By.CSS_SELECTOR, ".btn-primary:nth-child(1)").click()
 #maintenant, recup le texte d'une question
 def recup_question_inputable(card_exam_question_card, patterns):
     titre_question = card_exam_question_card.find_element(By.CLASS_NAME,value="card-header").text
-    titre_question = titre_question.split(r'\n',0)
     topic_question = card_exam_question_card.find_element(By.CLASS_NAME, value="question-title-topic").text
     text_question = card_exam_question_card.find_element(By.CLASS_NAME,value="card-text").get_attribute('innerHTML')
     options_question = card_exam_question_card.find_element(By.CLASS_NAME,value="question-choices-container").get_attribute('innerHTML')
@@ -115,6 +114,7 @@ def add_to_the_db(liste_contenu_inputables):
     #db.session.commit()
         # Iterate through the questions in the list
     for item in liste_contenu_inputables :
+        print(item)
         item_name = item[5]
         item = db.session.query(Questionnaires).filter_by(name=item_name).first()
         if item:
@@ -142,9 +142,3 @@ with app.app_context():
 ####Miaou
 
 #insérer dans la ddb : bon exemple d'insertion toute faite
-
-
-
-
-
-
