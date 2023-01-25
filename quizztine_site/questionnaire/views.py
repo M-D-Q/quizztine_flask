@@ -3,6 +3,8 @@ from quizztine_site.questionnaire.forms import QuestionForm, SelectQuestionnaire
 from quizztine_site import db
 from quizztine_site.models import Questionnaires,Questions
 from random import shuffle
+from  sqlalchemy.sql.expression import func
+
 
 questions = Blueprint('questions', __name__)
 
@@ -13,6 +15,7 @@ def get_questionnaires():
 
 def get_questions(questionnaire_id):
     return Questions.query.filter_by(master_questionnaire=questionnaire_id).all()
+    #order_by(func.random())
 
 
 #choosing questionnaire
@@ -38,7 +41,8 @@ def questionnaire():
     if not questionnaire_id:
         return redirect('/questionnairechoice')
     all_questions = get_questions(questionnaire_id)
-    shuffle(all_questions)
+
+    #shuffle(all_questions)
     if session['25first']:
         all_questions = all_questions[:25]
 

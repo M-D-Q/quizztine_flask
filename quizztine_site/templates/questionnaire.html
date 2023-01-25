@@ -2,7 +2,9 @@
 {% block content %}
     <h1>Question {{ curr_question }} / {{ len_questions }}</h1>
     <br>
-    <p>{{ question }}</p>
+    
+    <p >{{ question }}</p>
+    <br>
     <form method="post">
         {{ form.hidden_tag() }}
         {{ form.answer.label }} {{ form.answer(size=20) }}
