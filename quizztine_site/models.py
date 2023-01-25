@@ -71,3 +71,22 @@ class Questionnaires(db.Model):
         self.name = name
         self.description = description
 
+class QuestionsHTML(db.Model):
+    __tablename__ = 'questionsHTML'
+    id = db.Column(db.Integer, primary_key=True)
+    question_name = db.Column(db.Text, nullable=False)
+    question_html = db.Column(db.Text, nullable=False)
+    options_html = db.Column(db.Text, nullable=False)
+    answer = db.Column(db.String(140), nullable=False)
+    answer_html = db.Column(db.Text, nullable=False)
+    master_questionnaire = db.Column(db.Integer, db.ForeignKey('questionnaires.id'))
+    trustworthiness = db.Column(db.String(140), nullable=False)
+
+    def __init__(self, question_name, question_html, options_html, answer, answer_html, master_questionnaire, trustworthiness):
+        self.question_name = question_name
+        self.question_html = question_html
+        self.options_html = options_html
+        self.answer = answer
+        self.answer_html = answer_html
+        self.master_questionnaire = master_questionnaire
+        self.trustworthiness = trustworthiness
