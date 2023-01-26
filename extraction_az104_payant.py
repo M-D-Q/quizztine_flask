@@ -14,6 +14,15 @@ from quizztine_site import db
 from quizztine_site.models import Questionnaires, QuestionsHTML
 import re
 
+def replace_image_html(string_html):
+    match = re.search(r'<img src="\./AZ-104_files/(.+)" class="in-exam-image">', string_html)
+    if match :
+        miaou = match.group(1)
+        string_corrigee = r'''<img src="{{url_for('static',filename='images/'''+str(miaou)+r'''\')}}">'''
+        new_string = re.sub(r'<img src="\./AZ-104_files/(.+)" class="in-exam-image">', string_corrigee, string_html)
+        return(new_string)
+    else :
+        return(string_html)
 
 pattern_1 = r'<span class="badge badge-success most-voted-answer-badge".+</span>'
 pattern_2 = r'<div class="voted-answers-tally d-none">.+</div>'
@@ -51,11 +60,16 @@ def recup_question_inputable(card_exam_question_card, patterns):
     titre_question = card_exam_question_card.find_element(By.CLASS_NAME,value="card-header").text
     topic_question = card_exam_question_card.find_element(By.CLASS_NAME, value="question-title-topic").text
     text_question = card_exam_question_card.find_element(By.CLASS_NAME,value="card-text").get_attribute('innerHTML')
+    text_question = replace_image_html(text_question)
     options_question = card_exam_question_card.find_element(By.CLASS_NAME,value="question-choices-container").get_attribute('innerHTML')
+    options_question = replace_image_html(options_question)
+
     inputable_answer = card_exam_question_card.find_element(By.CLASS_NAME,value="correct-answer").text
     if len(inputable_answer) <= 1 :
         inputable_answer = card_exam_question_card.find_element(By.CLASS_NAME,value="correct-answer").get_attribute('innerHTML')
     answer_and_explanation = card_exam_question_card.find_element(By.CLASS_NAME,value="correct-answer").get_attribute('innerHTML')+" \n <br>"+card_exam_question_card.find_element(By.CLASS_NAME,value="answer-description").get_attribute('innerHTML')
+    answer_and_explanation = replace_image_html(answer_and_explanation)
+
     #### UN PEU DE REGEX - je veux vérifier si la 'Correct Answer' est aussi la 'most voted'
     capture_group = patterns[2]
     match = re.search(capture_group,inputable_answer)
@@ -66,7 +80,7 @@ def recup_question_inputable(card_exam_question_card, patterns):
         else :
             trustworthy = "false"
     else :
-        trustworthy = "true"
+        trustworthy = "unknown"
     liste_html = [titre_question, text_question, options_question, inputable_answer, answer_and_explanation, topic_question, trustworthy]
     #Re regex - cette fois ci pour éliminer les patterns poubelles
     for item in range(0, len(liste_html)):
@@ -82,13 +96,13 @@ def recup_question_non_inputable(card_exam_question_card):
 # En fait il faut commencer par itérer par toutes les questions. 
 
 def miaou(browser, patterns):
-    #i = 0
+    i = 0
     all_questions = browser.find_elements(By.CLASS_NAME, value="exam-question-card")
     liste_contenu_inputables = [] #ce sera une liste de liste contenants tt les colonnes
     liste_question_non_inputables = [] #pour juste stocker le nom (num + topic) des questions sans input possible
     for element_miaou in all_questions :
         je_check_juste_un_truc = element_miaou.find_element(By.CLASS_NAME,value="correct-answer")
-        #i += 1
+        i += 1
         
         if je_check_juste_un_truc.find_elements(By.TAG_NAME,value="img"):
             print("voici une où la réponse est une image")
@@ -98,8 +112,8 @@ def miaou(browser, patterns):
         else :
             print("et là c'est une lettre")
             liste_contenu_inputables.append(recup_question_inputable(element_miaou,patterns))
-        #if i > 6 :
-        #    break
+        if i > 14 :
+            break
     print("FINITO, GO DB MAITENANT")
     return(liste_contenu_inputables)
 
@@ -111,7 +125,6 @@ def add_to_the_db(liste_contenu_inputables):
     #db.session.commit()
         # Iterate through the questions in the list
     for item in liste_contenu_inputables :
-        print(item)
         item_name = item[5]
         itemkek = db.session.query(Questionnaires).filter_by(name=item_name).first()
         if itemkek:
