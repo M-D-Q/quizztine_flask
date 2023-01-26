@@ -24,6 +24,18 @@ def replace_image_html(string_html):
     else :
         return(string_html)
 
+def replace_liste_image_html(string_html):
+    match_list = re.findall(r'<img src="\./AZ-104_files/([0-9]+\...g)" class="in-exam-image">', string_html)
+    if len(match_list) > 0:
+        for i in range(0,len(match_list)):
+            miaou = match_list[i]
+            string_corrigee = r'''<img src="{{ url_for('static',filename='images/'''+str(miaou)+r'''') }}">'''
+            string_html = re.sub(r'<img src="\./AZ-104_files/([0-9]+\...g)" class="in-exam-image">', string_corrigee, string_html, count=1)
+        return(string_html)
+    else:
+        return(string_html)
+
+
 pattern_1 = r'<span class="badge badge-success most-voted-answer-badge".+</span>'
 pattern_2 = r'<div class="voted-answers-tally d-none">.+</div>'
 capture_group = r'"voted_answers": "([A-E]{1,5})"'
@@ -60,15 +72,15 @@ def recup_question_inputable(card_exam_question_card, patterns):
     titre_question = card_exam_question_card.find_element(By.CLASS_NAME,value="card-header").text
     topic_question = card_exam_question_card.find_element(By.CLASS_NAME, value="question-title-topic").text
     text_question = card_exam_question_card.find_element(By.CLASS_NAME,value="card-text").get_attribute('innerHTML')
-    text_question = replace_image_html(text_question)
+    text_question = replace_liste_image_html(text_question)
     options_question = card_exam_question_card.find_element(By.CLASS_NAME,value="question-choices-container").get_attribute('innerHTML')
-    options_question = replace_image_html(options_question)
+    options_question = replace_liste_image_html(options_question)
 
     inputable_answer = card_exam_question_card.find_element(By.CLASS_NAME,value="correct-answer").text
     if len(inputable_answer) <= 1 :
         inputable_answer = card_exam_question_card.find_element(By.CLASS_NAME,value="correct-answer").get_attribute('innerHTML')
     answer_and_explanation = card_exam_question_card.find_element(By.CLASS_NAME,value="correct-answer").get_attribute('innerHTML')+" \n <br>"+card_exam_question_card.find_element(By.CLASS_NAME,value="answer-description").get_attribute('innerHTML')
-    answer_and_explanation = replace_image_html(answer_and_explanation)
+    answer_and_explanation = replace_liste_image_html(answer_and_explanation)
 
     #### UN PEU DE REGEX - je veux vérifier si la 'Correct Answer' est aussi la 'most voted'
     capture_group = patterns[2]
