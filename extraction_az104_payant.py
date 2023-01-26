@@ -19,7 +19,7 @@ def replace_image_html(string_html):
     if match :
         miaou = match.group(1)
         string_corrigee = r'''<img src="{{url_for('static',filename='images/'''+str(miaou)+r'''\')}}">'''
-        new_string = re.sub(r'<img src="\./AZ-104_files/(.+)" class="in-exam-image">', string_corrigee, string_html)
+        new_string = re.sub(r'<img src="\./AZ-104_files/.+" class="in-exam-image">', string_corrigee, string_html)
         return(new_string)
     else :
         return(string_html)
