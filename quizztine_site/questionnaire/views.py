@@ -30,7 +30,7 @@ def select_question_set():
         # get selected question set
         session['questionnaire_id'] = form.questionnaires.data
         session['25first'] = form.yes_no.data
-        if int(session['questionnaire_id']) == 17 : 
+        if int(session['questionnaire_id']) >= 17 : 
             return redirect('/questionnaireazure')
         else :
             return redirect('/questionnaire')
@@ -132,7 +132,7 @@ def next_question():
         percentage = (session['score'] / session['len_questions']) * 100
         session['percentage'] = percentage
         return redirect(url_for('questions.result'))
-    if int(session['questionnaire_id']) == 17 : 
+    if int(session['questionnaire_id']) >= 17 : 
         return redirect(url_for('questions.questionnaireazure'))
     else:
         return redirect(url_for('questions.questionnaire'))
