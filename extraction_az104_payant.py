@@ -81,13 +81,13 @@ def recup_question_non_inputable(card_exam_question_card):
 # En fait il faut commencer par itérer par toutes les questions. 
 
 def miaou(browser, patterns):
-    i = 0
+    #i = 0
     all_questions = browser.find_elements(By.CLASS_NAME, value="exam-question-card")
     liste_contenu_inputables = [] #ce sera une liste de liste contenants tt les colonnes
     liste_question_non_inputables = [] #pour juste stocker le nom (num + topic) des questions sans input possible
     for element_miaou in all_questions :
         je_check_juste_un_truc = element_miaou.find_element(By.CLASS_NAME,value="correct-answer")
-        i += 1
+        #i += 1
         
         if je_check_juste_un_truc.find_elements(By.TAG_NAME,value="img"):
             print("voici une où la réponse est une image")
@@ -97,8 +97,8 @@ def miaou(browser, patterns):
         else :
             print("et là c'est une lettre")
             liste_contenu_inputables.append(recup_question_inputable(element_miaou,patterns))
-        if i > 6 :
-            break
+        #if i > 6 :
+        #    break
     print("FINITO, GO DB MAITENANT")
     return(liste_contenu_inputables)
 
@@ -129,6 +129,7 @@ def add_to_the_db(liste_contenu_inputables):
                                     master_questionnaire=master_questionnaire,
                                     trustworthiness=item[6])
         db.session.add(new_question)
+        db.session.commit()
     db.session.commit()
 
 with app.app_context():

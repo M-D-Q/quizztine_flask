@@ -117,7 +117,6 @@ def questionnaireazure():
 
         return render_template('questionnaireazure.html', form=form, question=all_questions[current_question].question_html, options=all_questions[current_question].options_html, message=message, curr_question=current_question, len_questions=session['len_questions'])
     
-    print(all_questions)
     return render_template('questionnaireazure.html', form=form, question=all_questions[current_question].question_html, options=all_questions[current_question].options_html, curr_question=current_question, len_questions=session['len_questions'])
 
 
