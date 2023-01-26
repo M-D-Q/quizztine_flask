@@ -29,7 +29,7 @@ def replace_liste_image_html(string_html):
     if len(match_list) > 0:
         for i in range(0,len(match_list)):
             miaou = match_list[i]
-            string_corrigee = r'''<img src="{{ url_for('static',filename='images/'''+str(miaou)+r'''') }}">'''
+            string_corrigee = r'<img src="/static/images/'+str(miaou)+r'">'
             string_html = re.sub(r'<img src="\./AZ-104_files/([0-9]+\...g)" class="in-exam-image">', string_corrigee, string_html, count=1)
         return(string_html)
     else:
@@ -108,13 +108,13 @@ def recup_question_non_inputable(card_exam_question_card):
 # En fait il faut commencer par itérer par toutes les questions. 
 
 def miaou(browser, patterns):
-    i = 0
+    #i = 0
     all_questions = browser.find_elements(By.CLASS_NAME, value="exam-question-card")
     liste_contenu_inputables = [] #ce sera une liste de liste contenants tt les colonnes
     liste_question_non_inputables = [] #pour juste stocker le nom (num + topic) des questions sans input possible
     for element_miaou in all_questions :
         je_check_juste_un_truc = element_miaou.find_element(By.CLASS_NAME,value="correct-answer")
-        i += 1
+        #i += 1
         
         if je_check_juste_un_truc.find_elements(By.TAG_NAME,value="img"):
             print("voici une où la réponse est une image")
@@ -124,8 +124,8 @@ def miaou(browser, patterns):
         else :
             print("et là c'est une lettre")
             liste_contenu_inputables.append(recup_question_inputable(element_miaou,patterns))
-        if i > 14 :
-            break
+        #if i > 14 :
+        #    break
     print("FINITO, GO DB MAITENANT")
     return(liste_contenu_inputables)
 
