@@ -49,9 +49,10 @@ browser.implicitly_wait(3)
 browser.maximize_window()
 
 #get l'url de base :
+local_url_rj = "C:\\Users\\Romain\\Downloads\\cloned\\quizztine_flask\\quizztine_site\\static\\AZ-104.html"
 local_url = 'C:\\Users\\mdequick\\OneDrive - Capgemini\\Documents\\by_coding\\quizztine_flask\\AZ-104.html'
 base_url = "https://www.examtopics.com/exams/microsoft/az-104/custom-view/"
-browser.get(local_url)
+browser.get(local_url_rj)
 
 def login(browser):
     #login
@@ -108,29 +109,32 @@ def recup_question_non_inputable(card_exam_question_card):
 # En fait il faut commencer par itérer par toutes les questions. 
 
 def miaou(browser, patterns):
-    #i = 0
+    i = 0
     all_questions = browser.find_elements(By.CLASS_NAME, value="exam-question-card")
     liste_contenu_inputables = [] #ce sera une liste de liste contenants tt les colonnes
     liste_question_non_inputables = [] #pour juste stocker le nom (num + topic) des questions sans input possible
     for element_miaou in all_questions :
         je_check_juste_un_truc = element_miaou.find_element(By.CLASS_NAME,value="correct-answer")
-        #i += 1
+        i += 1
         
         if je_check_juste_un_truc.find_elements(By.TAG_NAME,value="img"):
-            print("voici une où la réponse est une image")
+            print(f"voici une où la réponse est une image - question : {i}")
             liste_question_non_inputables.append(recup_question_non_inputable(element_miaou))
-            print(liste_question_non_inputables)
+            
 
         else :
-            print("et là c'est une lettre")
+            print(f"et là c'est une lettre - question : {i}")
             liste_contenu_inputables.append(recup_question_inputable(element_miaou,patterns))
-        #if i > 14 :
+        #if i > 9 :
         #    break
     print("FINITO, GO DB MAITENANT")
+    with open("C:\\Users\\Romain\\Downloads\\cloned\\quizztine_flask\\questions_non_imputables.txt", 'w') as f:
+            print(liste_question_non_inputables,file=f)
+    print(liste_question_non_inputables)       
     return(liste_contenu_inputables)
 
 def add_to_the_db(liste_contenu_inputables):
-    
+    db.create_all()
     #questionnaire_name = "AZ-104 Everything"
     #new_questionnaire = Questionnaires(name=questionnaire_name)
     #db.session.add(new_questionnaire)

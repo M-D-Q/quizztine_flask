@@ -24,7 +24,8 @@ def replace_liste_image_html(string_html):
     if len(match_list) > 0:
         for i in range(0,len(match_list)):
             miaou = match_list[i]
-            string_corrigee = r'<img src="/static/images/'+str(miaou)+r'">'
+            #string_corrigee = r'''<img src="{{ url_for('static',filename='images/'''+str(miaou)+r'''') }}">'''
+            string_corrigee = (f"<img src=\"/static/images/{miaou}\">")
             string_html = re.sub(r'<img src="\./AZ-104_files/([0-9]+\...g)" class="in-exam-image">', string_corrigee, string_html, count=1)
         return(string_html)
     else:

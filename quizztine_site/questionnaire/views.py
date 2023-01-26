@@ -33,7 +33,7 @@ def select_question_set():
         if int(session['questionnaire_id']) >= 17 : 
             return redirect('/questionnaireazure')
         else :
-            return redirect('/questionnaire')
+            return redirect('/questionnaireazure')
     return render_template('select_questionnaire.html', form=form)
 
 
@@ -134,7 +134,7 @@ def next_question():
     if int(session['questionnaire_id']) >= 17 : 
         return redirect(url_for('questions.questionnaireazure'))
     else:
-        return redirect(url_for('questions.questionnaire'))
+        return redirect(url_for('questions.questionnaireazure'))
 
 @questions.route('/restart')
 def restart():
