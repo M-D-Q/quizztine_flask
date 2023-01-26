@@ -28,22 +28,23 @@ browser.implicitly_wait(3)
 browser.maximize_window()
 
 #get l'url de base :
-local_url = "file:///quizztine/sources/AZ-104 Exam – Free Actual Q&As, Page 1 _ ExamTopics.html"
+local_url = 'C:\\Users\\mdequick\\OneDrive - Capgemini\\Documents\\by_coding\\quizztine_flask\\AZ-104.html'
 base_url = "https://www.examtopics.com/exams/microsoft/az-104/custom-view/"
-browser.get(base_url)
+browser.get(local_url)
 
-#login
-username = "sliman.derrouiche@hotmail.fr"
-password = "CAP2023"
+def login(browser):
+    #login
+    username = "sliman.derrouiche@hotmail.fr"
+    password = "CAP2023"
 
-browser.find_element(By.XPATH, "/html/body/div[2]/div/div/div/div/div[2]/div/form/div[1]/div/input").send_keys(username)
-browser.find_element(By.XPATH,"/html/body/div[2]/div/div/div/div/div[2]/div/form/div[2]/div[1]/input").send_keys(password)
-browser.find_element(By.XPATH,"/html/body/div[2]/div/div/div/div/div[2]/div/form/button").click()
+    browser.find_element(By.XPATH, "/html/body/div[2]/div/div/div/div/div[2]/div/form/div[1]/div/input").send_keys(username)
+    browser.find_element(By.XPATH,"/html/body/div[2]/div/div/div/div/div[2]/div/form/div[2]/div[1]/input").send_keys(password)
+    browser.find_element(By.XPATH,"/html/body/div[2]/div/div/div/div/div[2]/div/form/button").click()
 
-#cheminement pour activer la vue en 455 (apparement ça met 228, good enough)
-browser.find_element(By.ID, "QuestionCount").send_keys("455")
-browser.find_element(By.ID, "QuestionCount").click()
-browser.find_element(By.CSS_SELECTOR, ".btn-primary:nth-child(1)").click()
+    #cheminement pour activer la vue en 455 (apparement ça met 228, good enough)
+    browser.find_element(By.ID, "QuestionCount").send_keys("455")
+    browser.find_element(By.ID, "QuestionCount").click()
+    browser.find_element(By.CSS_SELECTOR, ".btn-primary:nth-child(1)").click()
 
 #maintenant, recup le texte d'une question
 def recup_question_inputable(card_exam_question_card, patterns):

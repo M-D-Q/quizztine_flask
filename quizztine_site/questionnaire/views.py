@@ -76,7 +76,6 @@ def questionnaire():
             message = '<br>Incorrect ! <br>' + all_questions[current_question].explanation
 
         return render_template('questionnaire.html', form=form, question=all_questions[current_question].question, message=message, curr_question=current_question, len_questions=session['len_questions'])
-    print(all_questions)
     return render_template('questionnaire.html', form=form, question=all_questions[current_question].question, curr_question=current_question, len_questions=session['len_questions'])
 
 @questions.route('/questionnaireazure', methods=['GET','POST'])
