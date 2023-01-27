@@ -15,22 +15,23 @@ from quizztine_site.models import Questionnaires, QuestionsHTML
 import re
 
 def replace_image_html(string_html):
-    match = re.search(r'<img src="\./AZ-104_files/(.+)" class="in-exam-image">', string_html)
+    match = re.search(r'<img src="AZ-104_fichiers/([0-9]+\...g)" class="in-exam-image">', string_html)
     if match :
         miaou = match.group(1)
-        string_corrigee = r'''<img src="{{url_for('static',filename='images/'''+str(miaou)+r'''\')}}">'''
-        new_string = re.sub(r'<img src="\./AZ-104_files/.+" class="in-exam-image">', string_corrigee, string_html)
+        string_corrigee = r'''<img src="{{ url_for('static',filename='images/'''+str(miaou)+r'''') }}">'''
+        new_string = re.sub(r'<img src="AZ-104_fichiers/([0-9]+\...g)" class="in-exam-image">', string_corrigee, string_html)
         return(new_string)
     else :
         return(string_html)
 
 def replace_liste_image_html(string_html):
-    match_list = re.findall(r'<img src="\./AZ-104_files/([0-9]+\...g)" class="in-exam-image">', string_html)
+    match_list = re.findall(r'<img src="AZ-104_fichiers/([0-9]+\...g)" class="in-exam-image">', string_html)
     if len(match_list) > 0:
         for i in range(0,len(match_list)):
             miaou = match_list[i]
-            string_corrigee = r'<img src="/static/images/'+str(miaou)+r'">'
-            string_html = re.sub(r'<img src="\./AZ-104_files/([0-9]+\...g)" class="in-exam-image">', string_corrigee, string_html, count=1)
+            #string_corrigee = r'''<img src="{{ url_for('static',filename='images/'''+str(miaou)+r'''') }}">'''
+            string_corrigee = (f"<img src=\"/static/images/{miaou}\">")
+            string_html = re.sub(r'<img src="AZ-104_fichiers/([0-9]+\...g)" class="in-exam-image">', string_corrigee, string_html, count=1)
         return(string_html)
     else:
         return(string_html)
@@ -49,7 +50,7 @@ browser.implicitly_wait(3)
 browser.maximize_window()
 
 #get l'url de base :
-local_url_rj = "C:\\Users\\Romain\\Downloads\\cloned\\quizztine_flask\\quizztine_site\\static\\AZ-104.html"
+local_url_rj = "C:\\Users\\rjacek\\Downloads\\Git Clone\\quizztine_flask\\quizztine_site\\static\\AZ-104.html"
 local_url = 'C:\\Users\\mdequick\\OneDrive - Capgemini\\Documents\\by_coding\\quizztine_flask\\AZ-104.html'
 base_url = "https://www.examtopics.com/exams/microsoft/az-104/custom-view/"
 browser.get(local_url_rj)
@@ -125,16 +126,14 @@ def miaou(browser, patterns):
         else :
             print(f"et là c'est une lettre - question : {i}")
             liste_contenu_inputables.append(recup_question_inputable(element_miaou,patterns))
-        #if i > 9 :
+        #if i > 15 :
         #    break
     print("FINITO, GO DB MAITENANT")
-    with open("C:\\Users\\Romain\\Downloads\\cloned\\quizztine_flask\\questions_non_imputables.txt", 'w') as f:
-            print(liste_question_non_inputables,file=f)
-    print(liste_question_non_inputables)       
+    with open("C:\\Users\\rjacek\\Downloads\\Git Clone\\quizztine_flask\\questions_non_imputables.txt", 'w') as f:
+            print(liste_question_non_inputables,file=f)       
     return(liste_contenu_inputables)
 
 def add_to_the_db(liste_contenu_inputables):
-    db.create_all()
     #questionnaire_name = "AZ-104 Everything"
     #new_questionnaire = Questionnaires(name=questionnaire_name)
     #db.session.add(new_questionnaire)
