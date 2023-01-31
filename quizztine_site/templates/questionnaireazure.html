@@ -21,6 +21,8 @@
     <form method="post" action="{{ url_for('questions.next_question') }}">
         <button type="submit">Next Question</button>
     </form>
+    <br>
+    <p>Question id : {{ questionid }}</p>
     
     
 {% endblock %}

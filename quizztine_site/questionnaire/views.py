@@ -114,9 +114,9 @@ def questionnaireazure():
         else:
             message = '<br>Incorrect ! <br>' + all_questions[current_question].answer_html
 
-        return render_template('questionnaireazure.html', form=form, question=all_questions[current_question].question_html, options=all_questions[current_question].options_html, message=message, curr_question=current_question, len_questions=session['len_questions'])
+        return render_template('questionnaireazure.html', form=form, questionid=all_questions[current_question].id, question=all_questions[current_question].question_html, options=all_questions[current_question].options_html, message=message, curr_question=current_question, len_questions=session['len_questions'])
     
-    return render_template('questionnaireazure.html', form=form, question=all_questions[current_question].question_html, options=all_questions[current_question].options_html, curr_question=current_question, len_questions=session['len_questions'])
+    return render_template('questionnaireazure.html', form=form, questionid=all_questions[current_question].id, question=all_questions[current_question].question_html, options=all_questions[current_question].options_html, curr_question=current_question, len_questions=session['len_questions'])
 
 
 
