@@ -33,11 +33,6 @@ def get_questions_id_azure(questionnaire_id, short):
         liste_id = liste_id[:25]
     return liste_id
 
-def get_shuffled_list_of_id(questionnaire_id):
-    pass
-
-def get_shuffled_list_id_short(questionnaire_id):
-    pass
 
 
 
