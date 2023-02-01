@@ -13,13 +13,35 @@ def get_questionnaires():
     questionnaires = Questionnaires.query.all()
     return [(q.id, q.name) for q in questionnaires]
 
-def get_questions(questionnaire_id):
-    return Questions.query.filter_by(master_questionnaire=questionnaire_id).all()
-    #order_by(func.random())
+def get_questions_id(questionnaire_id, short):
+    liste =  Questions.query.filter_by(master_questionnaire=questionnaire_id).all()
+    liste_id = []
+    for x in liste :
+        liste_id.append(x.id)
+    shuffle(liste_id)
+    if short is True :
+        liste_id = liste_id[:25]
+    return liste_id
 
-def get_questions_azure(questionnaire_id):
-    return QuestionsHTML.query.filter_by(master_questionnaire=questionnaire_id).all()
-    
+def get_questions_id_azure(questionnaire_id, short):
+    liste = QuestionsHTML.query.filter_by(master_questionnaire=questionnaire_id).all()
+    liste_id = []
+    for x in liste :
+        liste_id.append(x.id)
+    shuffle(liste_id)
+    if short is True :
+        liste_id = liste_id[:25]
+    return liste_id
+
+def get_shuffled_list_of_id(questionnaire_id):
+    pass
+
+def get_shuffled_list_id_short(questionnaire_id):
+    pass
+
+
+
+
 
 #choosing questionnaire
 @questions.route('/questionnairechoice', methods=['GET', 'POST'])
@@ -29,10 +51,14 @@ def select_question_set():
     if form.validate_on_submit():
         # get selected question set
         session['questionnaire_id'] = form.questionnaires.data
-        session['25first'] = form.yes_no.data
+
         if int(session['questionnaire_id']) >= 17 : 
+            session['all_questions_id'] = get_questions_id_azure(int(session['questionnaire_id']), form.yes_no.data)
+            session['len_questions'] = len(session['all_questions_id'])
             return redirect('/questionnaireazure')
         else :
+            session['all_questions_id'] = get_questions_id(int(session['questionnaire_id']), form.yes_no.data)
+            session['len_questions'] = len(session['all_questions_id'])
             return redirect('/questionnaire')
     return render_template('select_questionnaire.html', form=form)
 
@@ -46,77 +72,60 @@ def questionnaire():
     questionnaire_id = session.get('questionnaire_id')
     if not questionnaire_id:
         return redirect('/questionnairechoice')
-    all_questions = get_questions(questionnaire_id)
     
-
-    #shuffle(all_questions)
-    if session['25first']:
-        all_questions = all_questions[:25]
-
+    all_questions_id = session['all_questions_id']
     if 'score' not in session:
         session['score'] = 0
     if 'current_question' not in session:
         session['current_question'] = 0
 
-    #current_question = session.get('current_question', 0)
-    #score = session.get('score', 0)
-    current_question = session['current_question']
-    session['len_questions'] = len(all_questions)
-
+    current_question_id = all_questions_id[session['current_question']]
+    real_current_question = Questions.query.filter_by(id=current_question_id).first()
     form = QuestionForm()
 
     if form.validate_on_submit():
 
         #get the answer from QuestionForm
         answer = form.answer.data
-        if answer.lower() == all_questions[current_question].answer.lower():
-            message = '<br>Correct ! <br>' + all_questions[current_question].explanation
+        if answer.lower() == real_current_question.answer.lower():
+            message = '<br>Correct ! <br>' + real_current_question.explanation
             session['score'] += 1
         else:
-            message = '<br>Incorrect ! <br>' + all_questions[current_question].explanation
+            message = '<br>Incorrect ! <br>' + real_current_question.explanation
 
-        return render_template('questionnaire.html', form=form, question=all_questions[current_question].question, message=message, curr_question=current_question, len_questions=session['len_questions'])
-    return render_template('questionnaire.html', form=form, question=all_questions[current_question].question, curr_question=current_question, len_questions=session['len_questions'])
+        return render_template('questionnaire.html', form=form, question=real_current_question.question, message=message, curr_question=session['current_question'], len_questions=session['len_questions'])
+    return render_template('questionnaire.html', form=form, question=real_current_question.question, curr_question=session['current_question'], len_questions=session['len_questions'])
 
 @questions.route('/questionnaireazure', methods=['GET','POST'])
 def questionnaireazure():
     questionnaire_id = session.get('questionnaire_id')
     if not questionnaire_id:
         return redirect('/questionnairechoice')
-
-    all_questions = get_questions_azure(questionnaire_id)
-    print(all_questions)
-    QuestionsHTML.query.filter_by(master_questionnaire=questionnaire_id).all()
-
-    #shuffle(all_questions)
-    if session['25first']:
-        all_questions = all_questions[:25]
-
+    
     if 'score' not in session:
         session['score'] = 0
     if 'current_question' not in session:
         session['current_question'] = 0
+        
+    all_questions_id = session['all_questions_id']
 
-    #current_question = session.get('current_question', 0)
-    #score = session.get('score', 0)
-    current_question = session['current_question']
-    session['len_questions'] = len(all_questions)
-
+    current_question_id = all_questions_id[session['current_question']]
+    real_current_question = QuestionsHTML.query.filter_by(id=current_question_id).first()
     form = QuestionForm()
 
     if form.validate_on_submit():
 
         #get the answer from QuestionForm
         answer = form.answer.data
-        if answer.lower() == all_questions[current_question].answer.lower():
-            message = '<br>Correct ! <br>' + all_questions[current_question].answer_html
+        if answer.lower() == real_current_question.answer.lower():
+            message = '<br>Correct ! <br>' + real_current_question.answer_html
             session['score'] += 1
         else:
-            message = '<br>Incorrect ! <br>' + all_questions[current_question].answer_html
+            message = '<br>Incorrect ! <br>' + real_current_question.answer_html
 
-        return render_template('questionnaireazure.html', form=form, questionid=all_questions[current_question].id, question=all_questions[current_question].question_html, options=all_questions[current_question].options_html, message=message, curr_question=current_question, len_questions=session['len_questions'])
+        return render_template('questionnaireazure.html', form=form, questionid=real_current_question.id, question=real_current_question.question_html, options=real_current_question.options_html, message=message, curr_question=session['current_question'], len_questions=session['len_questions'])
     
-    return render_template('questionnaireazure.html', form=form, questionid=all_questions[current_question].id, question=all_questions[current_question].question_html, options=all_questions[current_question].options_html, curr_question=current_question, len_questions=session['len_questions'])
+    return render_template('questionnaireazure.html', form=form, questionid=real_current_question.id, question=real_current_question.question_html, options=real_current_question.options_html, curr_question=session['current_question'], len_questions=session['len_questions'])
 
 
 
