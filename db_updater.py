@@ -12,6 +12,7 @@ def mod_answer (app, db):
       input_id = int(input("""Which ID :
    --> """))
       question_a_changer = db.session.query(QuestionsHTML).filter_by(id=input_id).first()
+      print(f"Current question : {question_a_changer.question_html}")
       print(f"Current Answer : {question_a_changer.answer}")
       answer_change = input("Your change :")
       question_a_changer.answer = answer_change
@@ -23,6 +24,7 @@ def mod_explanation (app, db):
       input_id = int(input("""Which ID :
    --> """))
       question_a_changer = db.session.query(QuestionsHTML).filter_by(id=input_id).first()
+      print(f"Current question : {question_a_changer.question_html}")
       print(f"Current Explanation : {question_a_changer.answer_html}")
       answerhtml_change = input("Your change :")
       question_a_changer.answer_html = answerhtml_change
