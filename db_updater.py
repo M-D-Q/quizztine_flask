@@ -42,6 +42,17 @@ def mod_question (app, db):
       db.session.add(question_a_changer)
       db.session.commit()
 
+def mod_options (app, db):
+   with app.app_context():
+      input_id = int(input("""Which ID:
+   --> """))
+      question_a_changer = db.session.query(QuestionsHTML).filter_by(id=input_id).first()
+      print(f"Current question : {question_a_changer.question_html}")
+      print(f"Current options : {question_a_changer.options_html}")
+      optionhtml_change = input("Your change: ")
+      question_a_changer.options_html = optionhtml_change
+      db.session.add(question_a_changer)
+      db.session.commit()
 
 
 choice = int(input("Modify 1.Answer or 2.Explanation or 3.Question ?"))
@@ -51,5 +62,7 @@ elif choice == 2 :
    mod_explanation(app,db)
 elif choice == 3 :
    mod_question(app,db)
+elif choice == 4 :
+   mod_options(app,db)
 else :
    print("Miaou")
