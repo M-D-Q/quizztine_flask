@@ -54,15 +54,16 @@ def mod_options (app, db):
       db.session.add(question_a_changer)
       db.session.commit()
 
-
-choice = int(input("Modify 1.Answer or 2.Explanation or 3.Question ?"))
-if choice == 1 :
-   mod_answer(app,db)
-elif choice == 2 :
-   mod_explanation(app,db)
-elif choice == 3 :
-   mod_question(app,db)
-elif choice == 4 :
-   mod_options(app,db)
-else :
-   print("Miaou")
+while True:
+   choice = int(input("Modify 1.Answer or 2.Explanation 3.Question or 4.Options ?"))
+   if choice == 1 :
+      mod_answer(app,db)
+   elif choice == 2 :
+      mod_explanation(app,db)
+   elif choice == 3 :
+      mod_question(app,db)
+   elif choice == 4 :
+      mod_options(app,db)
+   else :
+      print("Miaou")
+      exit()
