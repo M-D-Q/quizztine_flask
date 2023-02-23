@@ -57,7 +57,7 @@ browser.get(local_url_rj)
 
 def login(browser):
     #login
-    username = "sliman.derrouiche@hotmail.fr"
+    username = "XXX"
     password = "CAP2023"
 
     browser.find_element(By.XPATH, "/html/body/div[2]/div/div/div/div/div[2]/div/form/div[1]/div/input").send_keys(username)
